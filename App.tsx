@@ -1,127 +1,117 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, {type PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
+import React, {useEffect, useMemo, useReducer} from 'react';
+import {StatusBar, Platform} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
-
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+import auth from '@react-native-firebase/auth';
+import {NavigationContainer} from '@react-navigation/native';
+import {AppContext, AuthContext} from './src/context/AuthContext';
+import ThemeProvider from './src/hooks/useTheme';
+import Onboarding from './src/navigation/OnboardingScreen';
+import AuthScreen from './src/navigation/AuthScreen';
+import reducer, {ActionKind} from './src/reducer';
+import {initialState} from './src/state';
+import {
+  getProfile,
+  getProjectsPublished,
+  getTransactions,
+  getRelatedProject,
+} from './src/api';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // use useReducer hooks
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  //Hide Splash screen on app load.
-  React.useEffect(() => {
-    SplashScreen.hide();
-  });
+  // AuthContext
+  const authContext: AppContext = useMemo(
+    () => ({
+      state,
+      dispatch: {
+        fetchProfile(user) {
+          dispatch({
+            type: ActionKind.GET_PROFILE,
+            payload: user,
+          });
+        },
+        fetchTransactions(transactions) {
+          dispatch({
+            type: ActionKind.GET_TRANSACTIONS,
+            payload: transactions,
+          });
+        },
+        fetchProjects(projects) {
+          dispatch({
+            type: ActionKind.GET_PROJECTS,
+            payload: projects,
+          });
+        },
+        fetchProjectRelated(projectRelated) {
+          dispatch({
+            type: ActionKind.GET_PROJECT_RELATED,
+            payload: projectRelated,
+          });
+        },
+        fetchEarning(earning) {
+          dispatch({
+            type: ActionKind.GET_EARNING,
+            payload: earning,
+          });
+        },
+        signOut() {
+          dispatch({type: ActionKind.SIGNOUT});
+        },
+      },
+    }),
+    [state],
+  );
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  // Handle user state changes
+  const onAuthStateChanged = (userAuth: any) => {
+    getProfile(userAuth?.uid)
+      .then(user => {
+        if (user) {
+          authContext.dispatch.fetchProfile(user);
+          // Get list of projects published
+          getProjectsPublished().then(response =>
+            authContext.dispatch.fetchProjects(response),
+          );
+          // Get list of transactions
+          getTransactions(user.uid).then(transactions =>
+            authContext.dispatch.fetchTransactions(transactions),
+          );
+          // Get list of earnings
+          getRelatedProject(user.uid).then(earnings =>
+            authContext.dispatch.fetchEarning(earnings),
+          );
+          //Hide Splash screen on app load.
+          SplashScreen.hide();
+        }
+      })
+      .catch(() => {
+        SplashScreen.hide();
+        authContext.dispatch.signOut();
+      });
   };
 
+  useEffect(() => {
+    //Check if user is authenticated on app load..
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  // Handle user state changes
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <ThemeProvider>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
+        backgroundColor={Platform.OS === 'ios' ? 'transparent' : '#9f662f'}
+        barStyle={Platform.OS === 'android' ? 'light-content' : 'default'}
+        networkActivityIndicatorVisible={true}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer>
+          {!state?.isSignout ? <AuthScreen /> : <Onboarding />}
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </ThemeProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
