@@ -83,6 +83,9 @@ const App = () => {
           );
           //Hide Splash screen on app load.
           SplashScreen.hide();
+        } else {
+          SplashScreen.hide();
+          authContext.dispatch.signOut();
         }
       })
       .catch(() => {
