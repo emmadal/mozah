@@ -1,10 +1,12 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View, Text, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import {withTheme, Chip} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Entypo';
 
 const TransactionCard = ({item, theme}: any) => {
   const {colors} = theme;
+  const navigation = useNavigation();
 
   function padTo2Digits(num: number) {
     return num.toString().padStart(2, '0');
@@ -20,7 +22,14 @@ const TransactionCard = ({item, theme}: any) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity key={item?.id} style={styles.trans}>
+      <TouchableOpacity
+        key={item?.id}
+        style={styles.trans}
+        onPress={() =>
+          navigation.navigate('TransactionDetail', {
+            transaction: item,
+          })
+        }>
         <Text style={styles.creationTime}>
           {formatDate(item?.creation_time)}
         </Text>

@@ -79,7 +79,13 @@ const Home: React.FC = ({theme}: any) => {
                   Number(new Date(a?.creation_time)),
               )
               .map((item: any) => (
-                <TouchableOpacity key={item?.id}>
+                <TouchableOpacity
+                  key={item?.id}
+                  onPress={() =>
+                    navigation.navigate('TransactionDetail', {
+                      transaction: item,
+                    })
+                  }>
                   <Text style={styles.creationTime}>
                     {formatDate(item?.creation_time)}
                   </Text>

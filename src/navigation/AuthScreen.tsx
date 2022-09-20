@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {withTheme} from 'react-native-paper';
 import TabBar from './TabBar';
 import ProjectDetails from '../screens/ProjectDetails';
+import TransactionDetails from '../screens/TransactionDetails';
 import Resume from '../screens/Resume';
 import LegalMention from '../screens/LegalMention';
 import CGU from '../screens/CGU';
@@ -26,6 +27,14 @@ const AuthStack = () => {
         component={ProjectDetails}
         options={({route}) => ({
           headerTitle: `${route?.params?.item?.name}`,
+          headerBackTitle: 'Retour',
+        })}
+      />
+      <Stack.Screen
+        name="TransactionDetail"
+        component={TransactionDetails}
+        options={({route}) => ({
+          headerTitle: `Transaction du projet (${route?.params?.transaction?.project_name})`,
           headerBackTitle: 'Retour',
         })}
       />
