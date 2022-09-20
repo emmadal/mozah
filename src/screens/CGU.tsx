@@ -13,14 +13,14 @@ const CGU: React.FC = () => {
           resizeMethod="resize"
         />
         <Text style={styles.desc}>
-          Mozah Invest est situé au 3 rue jean Paul Sartre 91860 Epinay sous
-          Sénart au capital de 1000€. Siren 850299546 Siret 85029954600018
-          Entrepreneur individuel. NACE : 70.22Z Immatriculation : 2019-04- 22
-          En activité depuis 2019-04-22 Dirigeant : M Kan Mermoz Ouffouet.
+          MOZAH INVEST, SARL UNIPERSONNELLE situé à Abidjan COCODY Riviera
+          Palmeraie 27 BP 032 Abidjan 27 et au capital de 1 000 000 FCFA. N°RCCM
+          du siège : CI-ABJ-2016-B-17004
         </Text>
         <Text style={styles.desc}>
-          Mozah Invest est une plateforme d’investissement participatif en
-          royaltie dédiée à divers projets et adossée un Jeton.
+          Mozah Invest est une plateforme innovante de financement de projets
+          participatif en Afrique de l'Ouest précisément en Côte d'Ivoire dédiée
+          à divers projets et adossée un Jeton.
         </Text>
         <Text style={styles.desc}>
           MOZAH INVEST exploite un site internet (ci-après « le Site ») aussi
@@ -477,20 +477,6 @@ const CGU: React.FC = () => {
           demanderons soit une facture, soit un justificatif de déclaration aux
           impôts.
         </Text>
-        <Text style={styles.desc}>Réclamations</Text>
-        <Text style={styles.desc}>
-          Dans le cas où vous avez contacté le support de Mozah Invest et que
-          nous sommes dans l’incapacité d’aboutir à une solution pour votre
-          requête, il vous est possible de saisir notre Médiateur - CM2C (Centre
-          de la médiation de consommation et de conciliateurs de justice), pour
-          toute réclamation introduite au cours des douze (12) derniers mois,
-          par voie électronique : https://cm2c.net/. La solution proposée par le
-          Médiateur ne s&#39;impose pas aux parties, qui restent libres à tout
-          moment de sortir du processus de Médiation.
-        </Text>
-        <Text style={styles.desc}>CM2C</Text>
-        <Text style={styles.desc}>14 rue Saint Jean, 75017 Paris</Text>
-        <Text style={styles.desc}>Tel : 01 89 47 00 14</Text>
       </ScrollView>
     </View>
   );
@@ -502,15 +488,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   tinyLogo: {
-    height: 150,
+    height: 100,
+    marginVertical: 10,
     width: 'auto',
   },
   desc: {
     fontSize: 20,
-    marginHorizontal: 10,
+    marginHorizontal: 20,
     marginVertical: 10,
     color: '#000',
-    textAlign: 'justify',
   },
   email: {
     fontWeight: 'bold',
