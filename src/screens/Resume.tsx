@@ -15,7 +15,8 @@ import {
   getPaypalAuthToken,
   addTransaction,
   affiliateProject,
-  getProfile,
+  getTransactions,
+  getRelatedProject,
 } from '../api';
 import {AuthContext} from '../context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +26,144 @@ const Resume: React.FC = ({route}: any) => {
   const {state, dispatch} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
+
+  const handlePay = async (values: {amount: any}) => {
+    if (payment_method?.name === 'Paypal') {
+      if (state.user.metamask_acc) {
+        try {
+          setLoading(!loading);
+          const token = await getPaypalAuthToken();
+          if (token?.access_token) {
+            const req = await requestOneTimePayment(
+              'sandbox_rzcxyvvp_g9npgzxsyqxy42kd',
+              {
+                amount: String(values.amount),
+                currency: 'EUR',
+                localeCode: 'fr_FR',
+                shippingAddressRequired: false,
+                userAction: 'commit', // display 'Pay Now' on the PayPal review page
+                // one of 'authorize', 'sale', 'order'. defaults to 'authorize'. see details here: https://developer.paypal.com/docs/api/payments/v1/#payment-create-request-body
+                intent: 'authorize',
+              },
+            );
+            if (req?.payerId) {
+              const obj = {
+                id: req?.nonce,
+                amount: parseFloat(String(values.amount)).toFixed(2),
+                fullName: state.user.fullName,
+                payment_status: 'Payé',
+                currency: 'EUR',
+                payment_method: payment_method?.name,
+                project_name: project?.name,
+                creation_time: new Date().toISOString(),
+                uid: state.user.uid,
+              };
+              // attribute transaction to user
+              await addTransaction(obj);
+
+              if (values.amount >= 100 && values.amount <= 750) {
+                // compute user income
+                const profit = parseFloat(
+                  String((values.amount * 20) / 100),
+                ).toFixed(2);
+                // create an object for user related project
+                const relatedProject = {
+                  projectId: project?.id,
+                  project_name: project?.name,
+                  project_budget: project?.budget,
+                  token: 100,
+                  income: parseFloat(profit),
+                  amount_invested: Number(values.amount),
+                };
+                // attribute project to investor
+                const res = await affiliateProject(state.user, relatedProject);
+                if (res) {
+                  const [transactions, earning] = await Promise.all([
+                    getTransactions(state.user.uid),
+                    getRelatedProject(state.user.uid),
+                  ]);
+                  dispatch.fetchTransactions(transactions);
+                  dispatch.fetchEarning(earning);
+                  values.amount = 0;
+                  setLoading(false);
+                  navigation.navigate('PaymentSuccess');
+                }
+              }
+              if (values.amount >= 800 && values.amount <= 2500) {
+                // compute user income
+                const profit = parseFloat(
+                  String((values.amount * 25) / 100),
+                ).toFixed(2);
+                // create an object for user related project
+                const relatedProject = {
+                  projectId: project?.id,
+                  project_name: project?.name,
+                  project_budget: project?.budget,
+                  token: 300,
+                  income: parseFloat(profit),
+                  amount_invested: Number(values.amount),
+                };
+                // attribute project to investor
+                const res = await affiliateProject(state.user, relatedProject);
+                if (res) {
+                  const [transactions, earning] = await Promise.all([
+                    getTransactions(state.user.uid),
+                    getRelatedProject(state.user.uid),
+                  ]);
+                  dispatch.fetchTransactions(transactions);
+                  dispatch.fetchEarning(earning);
+                  values.amount = 0;
+                  setLoading(false);
+                  navigation.navigate('PaymentSuccess');
+                }
+              }
+              if (values.amount >= 2750 && values.amount <= 10000) {
+                // compute user income
+                const profit = parseFloat(
+                  String((values.amount * 30) / 100),
+                ).toFixed(2);
+                // create an object for user related project
+                const relatedProject = {
+                  projectId: project?.id,
+                  project_name: project?.name,
+                  project_budget: project?.budget,
+                  token: 500,
+                  income: parseFloat(profit),
+                  amount_invested: Number(values.amount),
+                };
+                // attribute project to investor
+                const res = await affiliateProject(state.user, relatedProject);
+                if (res) {
+                  const [transactions, earning] = await Promise.all([
+                    getTransactions(state.user.uid),
+                    getRelatedProject(state.user.uid),
+                  ]);
+                  dispatch.fetchTransactions(transactions);
+                  dispatch.fetchEarning(earning);
+                  values.amount = 0;
+                  setLoading(false);
+                  navigation.navigate('PaymentSuccess');
+                }
+              }
+            }
+          } else {
+            setLoading(false);
+            Alert.alert("Une erreur de connexion s'est produite");
+          }
+        } catch (error) {
+          setLoading(false);
+          Alert.alert("L'opération a été annulée");
+        }
+      } else {
+        Alert.alert(
+          'Vous ne disposez pas de compte metamask. Veuillez mettre a jour votre profile',
+        );
+      }
+    }
+    if (payment_method?.name === 'Orange Money') {
+      console.log(values);
+    }
+  };
 
   return (
     <ScrollView
@@ -46,7 +185,6 @@ const Resume: React.FC = ({route}: any) => {
       </View>
       <View style={styles.card}>
         <Formik
-          enableReinitialize={true}
           validateOnMount={true}
           initialValues={{
             amount: 0,
@@ -73,129 +211,15 @@ const Resume: React.FC = ({route}: any) => {
             }
             return errors;
           }}
-          onSubmit={async values => {
-            if (payment_method?.name === 'Paypal') {
-              if (state.user.metamask_acc) {
-                setLoading(!loading);
-                //sandbox_9dbg82cq_dcpspy2brwdjr3qn
-                const token = await getPaypalAuthToken();
-                if (token?.access_token) {
-                  const req = await requestOneTimePayment(
-                    'sandbox_rzcxyvvp_g9npgzxsyqxy42kd',
-                    {
-                      amount: String(values.amount),
-                      currency: 'EUR',
-                      localeCode: 'fr_FR',
-                      shippingAddressRequired: false,
-                      userAction: 'commit', // display 'Pay Now' on the PayPal review page
-                      // one of 'authorize', 'sale', 'order'. defaults to 'authorize'. see details here: https://developer.paypal.com/docs/api/payments/v1/#payment-create-request-body
-                      intent: 'authorize',
-                    },
-                  );
-                  if (req?.payerId) {
-                    const obj = {
-                      id: req?.nonce,
-                      amount: parseFloat(String(values.amount)).toFixed(2),
-                      fullName: state.user.fullName,
-                      payment_status: 'Payé',
-                      currency: 'EUR',
-                      payment_method: payment_method?.name,
-                      project_name: project?.name,
-                      creation_time: new Date().toISOString(),
-                      uid: state.user.uid,
-                    };
-                    // attribute transaction to user
-                    await addTransaction(obj);
-
-                    if (values.amount >= 100 && values.amount <= 750) {
-                      // compute user income
-                      const profit = parseFloat(
-                        String((values.amount * 20) / 100),
-                      ).toFixed(2);
-                      // create an object for user related project
-                      const relatedProject = {
-                        projectId: project?.id,
-                        project_name: project?.name,
-                        project_budget: project?.budget,
-                        token: 100,
-                        income: parseFloat(profit),
-                        amount_invested: Number(values.amount),
-                      };
-                      // attribute project to investor
-                      await affiliateProject(state.user, relatedProject);
-                      getProfile(state.user.uid).then(user => {
-                        values.amount = 0;
-                        setLoading(false);
-                        dispatch.fetchProfile(user);
-                        navigation.navigate('PaymentSuccess');
-                      });
-                    }
-                    if (values.amount >= 800 && values.amount <= 2500) {
-                      // compute user income
-                      const profit = parseFloat(
-                        String((values.amount * 25) / 100),
-                      ).toFixed(2);
-                      // create an object for user related project
-                      const relatedProject = {
-                        projectId: project?.id,
-                        project_name: project?.name,
-                        project_budget: project?.budget,
-                        token: 300,
-                        income: parseFloat(profit),
-                        amount_invested: Number(values.amount),
-                      };
-                      // attribute project to investor
-                      await affiliateProject(state.user, relatedProject);
-                      getProfile(state.user.uid).then(user => {
-                        values.amount = 0;
-                        setLoading(false);
-                        dispatch.fetchProfile(user);
-                        navigation.navigate('PaymentSuccess');
-                      });
-                    }
-                    if (values.amount >= 2750 && values.amount <= 10000) {
-                      // compute user income
-                      const profit = parseFloat(
-                        String((values.amount * 30) / 100),
-                      ).toFixed(2);
-                      // create an object for user related project
-                      const relatedProject = {
-                        projectId: project?.id,
-                        project_name: project?.name,
-                        project_budget: project?.budget,
-                        token: 500,
-                        income: parseFloat(profit),
-                        amount_invested: Number(values.amount),
-                      };
-                      // attribute project to investor
-                      await affiliateProject(state.user, relatedProject);
-                      getProfile(state.user.uid).then(user => {
-                        values.amount = 0;
-                        setLoading(false);
-                        dispatch.fetchProfile(user);
-                        navigation.navigate('PaymentSuccess');
-                      });
-                    }
-                  }
-                }
-              } else {
-                Alert.alert(
-                  'Vous ne disposez pas de compte metamask. Veuillez mettre a jour votre profile',
-                );
-              }
-            }
-            if (payment_method?.name === 'Orange Money') {
-              console.log(values);
-            }
-          }}>
-          {({handleChange, handleBlur, values, handleSubmit, errors}) => (
+          onSubmit={values => handlePay(values)}>
+          {({handleChange, handleBlur, values, errors}) => (
             <Fragment>
               <Loader loading={loading} />
               <View style={styles.input}>
                 <TextInput
                   mode="outlined"
                   autoCapitalize="none"
-                  keyboardType="number-pad"
+                  keyboardType="default"
                   value={values.amount}
                   label="Le montant de votre investissement"
                   onChangeText={handleChange('amount')}
@@ -206,7 +230,7 @@ const Resume: React.FC = ({route}: any) => {
                 )}
                 {!errors.amount && payment_method?.name === 'Paypal' && (
                   <Button
-                    onPress={handleSubmit}
+                    onPress={() => handlePay(values)}
                     buttonColor="#0079C1"
                     textColor="white"
                     style={styles.paypalBtn}
@@ -214,16 +238,16 @@ const Resume: React.FC = ({route}: any) => {
                     Payer avec Paypal
                   </Button>
                 )}
-                {!errors.amount && payment_method?.name === 'Orange Money' && (
+                {/* {!errors.amount && payment_method?.name === 'Orange Money' && (
                   <Button
-                    onPress={handleSubmit}
+                    onPress={() => ''}
                     buttonColor="orange"
                     textColor="white"
                     style={styles.orangeBtn}
                     theme={{roundness: 20}}>
                     Payer avec Orange Money
                   </Button>
-                )}
+                )} */}
               </View>
             </Fragment>
           )}

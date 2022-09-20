@@ -34,9 +34,9 @@ export const payments = [
     name: 'Paypal',
     img: require('../assets/images/paypal.png'),
   },
-  {
-    id: 2,
-    name: 'Orange Money',
-    img: require('../assets/images/orangemoney.png'),
-  },
+  // {
+  //   id: 2,
+  //   name: 'Orange Money',
+  //   img: require('../assets/images/orangemoney.png'),
+  // },
 ];
