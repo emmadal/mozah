@@ -200,13 +200,15 @@ const Profile: React.FC = ({theme}: any) => {
       </ScrollView>
       <Snackbar
         duration={3000}
-        style={[
-          styles.snackbar,
-          {
-            backgroundColor: colors.primary,
-            color: colors.white,
-          },
-        ]}
+        action={{
+          label: 'Fermer',
+          onPress: () => onDismissSnackBar(),
+          labelStyle: {color: colors.white},
+        }}
+        style={{
+          backgroundColor: colors.primary,
+          color: colors.white,
+        }}
         visible={visible}
         onDismiss={onDismissSnackBar}>
         Profil mis a jour.
