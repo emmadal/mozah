@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "16233594734",
+    "project_id": "mozas-3467b",
+    "storage_bucket": "mozas-3467b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16233594734:android:77b3714270a48a766f0b7f",
+        "android_client_info": {
+          "package_name": "com.mozah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "16233594734-pngmp2rq51gvu5ki9geko74085mnegi4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg8mhYe1Ranh5YoWqf-dQc3O3Ece8HFcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "16233594734-pngmp2rq51gvu5ki9geko74085mnegi4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "16233594734-bc38popfrh91dnfufo910lndq8tr2sih.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mozahinvest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
