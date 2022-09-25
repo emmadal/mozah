@@ -160,9 +160,7 @@ const Resume: React.FC = ({route}: any) => {
         );
       }
     }
-    if (payment_method?.name === 'Orange Money') {
-      console.log(values);
-    }
+    if (payment_method?.name === 'Orange Money') {}
   };
 
   return (

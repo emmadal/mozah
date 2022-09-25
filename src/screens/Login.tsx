@@ -14,12 +14,12 @@ import Loader from '../components/Loader';
 import {login, getProfile} from '../api';
 import {AuthContext} from '../context/AuthContext';
 import {LoginTypes} from '../types';
+import theme from '../themes';
 
-const Login: React.FC = ({navigation, theme}: any) => {
+const Login: React.FC = ({navigation}: any) => {
   const [loading, setLoading] = useState(false);
   const [isView, setIsView] = useState(true);
   const {dispatch} = useContext(AuthContext);
-  const {colors} = theme;
 
   const handleLogin = async (values: LoginTypes) => {
     try {
@@ -91,7 +91,9 @@ const Login: React.FC = ({navigation, theme}: any) => {
                 label="Email"
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
-                right={<TextInput.Icon name="email" color={colors.primary} />}
+                right={
+                  <TextInput.Icon icon="email" iconColor={theme.colors.dark} />
+                }
               />
               {errors.email && touched.email && (
                 <Text style={styles.labelError}>{errors.email}</Text>
@@ -108,8 +110,8 @@ const Login: React.FC = ({navigation, theme}: any) => {
                 onBlur={handleBlur('password')}
                 right={
                   <TextInput.Icon
-                    name={isView ? 'eye-off' : 'eye'}
-                    color={colors.primary}
+                    icon={isView ? 'eye-off' : 'eye'}
+                    iconColor={theme.colors.dark}
                     onPress={handleViewPassword}
                   />
                 }
@@ -121,9 +123,9 @@ const Login: React.FC = ({navigation, theme}: any) => {
             <Button
               onPress={handleSubmit}
               style={styles.btn}
-              buttonColor="#9f662f"
-              textColor="white"
-              theme={{roundness: 20}}>
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.light}
+              theme={{roundness: 2}}>
               Connexion
             </Button>
             <TouchableOpacity
@@ -140,7 +142,7 @@ const Login: React.FC = ({navigation, theme}: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: theme.colors.light,
     justifyContent: 'center',
   },
   appTitle: {
@@ -171,12 +173,12 @@ const styles = StyleSheet.create({
   labelError: {
     marginTop: 4,
     fontSize: 13,
-    color: 'red',
+    color: theme.colors.error,
     fontWeight: 'bold',
   },
   textSignup: {
     fontWeight: 'bold',
-    color: '#9f662f',
+    color: theme.colors.primary,
     alignSelf: 'flex-end',
     marginTop: 30,
     marginRight: 50,

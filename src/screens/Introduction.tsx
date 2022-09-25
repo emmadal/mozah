@@ -8,6 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import {Button, withTheme, Text} from 'react-native-paper';
+import theme from '../themes';
 
 const Introduction: React.FC = ({navigation}: any) => {
   return (
@@ -26,9 +27,9 @@ const Introduction: React.FC = ({navigation}: any) => {
       <Button
         onPress={() => navigation.navigate('Login')}
         style={styles.btn}
-        buttonColor="#9f662f"
-        textColor="white"
-        theme={{roundness: 20}}>
+        buttonColor={theme.colors.primary}
+        textColor={theme.colors.light}
+        theme={{roundness: 2}}>
         Connexion
       </Button>
       <View style={styles.boxInfo}>

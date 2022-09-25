@@ -5,10 +5,10 @@ import * as yup from 'yup';
 import {Text, withTheme, Button, TextInput} from 'react-native-paper';
 import Loader from '../components/Loader';
 import {sendResetPasswordLink} from '../api';
+import theme from '../themes';
 
-const ForgetPassword: React.FC = ({navigation, theme}: any) => {
+const ForgetPassword: React.FC = ({navigation}: any) => {
   const [loading, setLoading] = useState(false);
-  const {colors} = theme;
 
   return (
     <View style={styles.container}>
@@ -81,19 +81,20 @@ const ForgetPassword: React.FC = ({navigation, theme}: any) => {
                 label="Email"
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
-                right={<TextInput.Icon name="email" color={colors.primary} />}
+                right={
+                  <TextInput.Icon icon="email" iconColor={theme.colors.dark} />
+                }
               />
               {errors.email && touched.email && (
                 <Text style={styles.labelError}>{errors.email}</Text>
               )}
             </View>
             <Button
-              labelStyle={[{color: colors.white}, styles.labelStyle]}
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.light}
+              theme={{roundness: 2}}
               onPress={handleSubmit}
-              style={styles.btn}
-              buttonColor="#9f662f"
-              textColor="white"
-              theme={{roundness: 20}}>
+              style={styles.btn}>
               Envoyer
             </Button>
           </React.Fragment>
@@ -106,7 +107,7 @@ const ForgetPassword: React.FC = ({navigation, theme}: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: theme.colors.light,
     justifyContent: 'center',
   },
   appTitle: {
@@ -116,8 +117,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   tinyLogo: {
-    height: 150,
-    width: 150,
+    height: 100,
+    width: 100,
     alignSelf: 'center',
     marginBottom: 30,
   },
@@ -131,13 +132,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     marginVertical: 10,
   },
-  labelStyle: {
-    fontSize: 18,
-  },
   labelError: {
     marginTop: 4,
     fontSize: 13,
-    color: 'red',
+    color: theme.colors.error,
     lineHeight: 17,
     fontWeight: 'bold',
   },

@@ -3,6 +3,7 @@ import {StyleSheet, View, Dimensions, ScrollView, Platform} from 'react-native';
 import {withTheme, Title, Paragraph} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {AuthContext} from '../context/AuthContext';
+import theme from '../themes';
 
 const Earnings = () => {
   const {state} = useContext(AuthContext);
@@ -43,7 +44,7 @@ const Earnings = () => {
             {computeIncome(state.earning)} €
           </Paragraph>
         </View>
-        <Icon name="creditcard" size={40} color="#ffffff" />
+        <Icon name="creditcard" size={40} color={theme.colors.light} />
       </View>
       <View style={styles.container}>
         <View>
@@ -52,7 +53,7 @@ const Earnings = () => {
             {computeToken(state.earning)}
           </Paragraph>
         </View>
-        <Icon name="API" size={40} color="#ffffff" />
+        <Icon name="API" size={40} color={theme.colors.light} />
       </View>
       <View style={styles.container}>
         <View>
@@ -61,7 +62,7 @@ const Earnings = () => {
             {computeInvestment(state.earning)} €
           </Paragraph>
         </View>
-        <Icon name="calculator" size={40} color="#ffffff" />
+        <Icon name="calculator" size={40} color={theme.colors.light} />
       </View>
     </ScrollView>
   );
@@ -78,10 +79,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     marginTop: Platform.OS === 'ios' ? 45 : 35,
     padding: 18,
-    backgroundColor: '#9f662f',
+    backgroundColor: theme.colors.primary,
   },
   title: {
-    color: '#ffffff',
+    color: theme.colors.light,
     marginBottom: 0,
     fontSize: 14,
   },
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
   amount: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: theme.colors.light,
   },
 });
 

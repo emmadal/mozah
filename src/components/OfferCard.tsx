@@ -15,9 +15,9 @@ import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
 import {payments} from '../data';
 import {useNavigation} from '@react-navigation/native';
 import {BottomSheetDefaultBackdropProps} from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types';
+import theme from '../themes';
 
-const OfferCard = ({item, theme, project}: any) => {
-  const {colors} = theme;
+const OfferCard = ({item, project}: any) => {
   const [indexBottomRef, setIndexBottomRef] = useState(-1);
   const [checked, setChecked] = useState({});
   const navigation = useNavigation();
@@ -75,10 +75,10 @@ const OfferCard = ({item, theme, project}: any) => {
         <Text style={styles.price}>{item?.price}</Text>
         <Button
           onPress={toggleSheet}
-          buttonColor="#9f662f"
-          textColor="white"
-          style={styles.btn}
-          theme={{roundness: 5}}>
+          buttonColor={theme.colors.primary}
+          textColor={theme.colors.light}
+          theme={{roundness: 2}}
+          style={styles.btn}>
           Choisir Cette Offre
         </Button>
         <Text style={styles.offer}>Cette offre inclus: </Text>
@@ -88,7 +88,11 @@ const OfferCard = ({item, theme, project}: any) => {
           titleStyle={styles.item}
           titleNumberOfLines={2}
           left={() => (
-            <List.Icon style={styles.listIcon} icon="tag" color="#9f662f" />
+            <List.Icon
+              style={styles.listIcon}
+              icon="tag"
+              color={theme.colors.primary}
+            />
           )}
         />
         <List.Item
@@ -97,7 +101,11 @@ const OfferCard = ({item, theme, project}: any) => {
           titleStyle={styles.item}
           titleNumberOfLines={2}
           left={() => (
-            <List.Icon style={styles.listIcon} icon="tag" color="#9f662f" />
+            <List.Icon
+              style={styles.listIcon}
+              icon="tag"
+              color={theme.colors.primary}
+            />
           )}
         />
         <List.Item
@@ -106,7 +114,11 @@ const OfferCard = ({item, theme, project}: any) => {
           titleStyle={styles.item}
           titleNumberOfLines={2}
           left={() => (
-            <List.Icon style={styles.listIcon} icon="tag" color="#9f662f" />
+            <List.Icon
+              style={styles.listIcon}
+              icon="tag"
+              color={theme.colors.primary}
+            />
           )}
         />
       </View>
@@ -136,7 +148,11 @@ const OfferCard = ({item, theme, project}: any) => {
                 }
                 style={styles.icon}
                 size={20}
-                color={item.id === checked?.id ? '#9f662f' : colors.text}
+                color={
+                  item.id === checked?.id
+                    ? theme.colors.primary
+                    : theme.colors.text
+                }
               />
             </Pressable>
           ))}
@@ -158,50 +174,50 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.colors.dark,
   },
   cancel: {
     fontWeight: 'bold',
-    color: 'red',
+    color: theme.colors.error,
     fontSize: 20,
   },
   continue: {
     fontWeight: 'bold',
-    color: 'green',
+    color: theme.colors.success,
     fontSize: 20,
   },
   name: {
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.colors.dark,
   },
   desc: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.colors.dark,
     textAlign: 'center',
   },
   auth: {
     marginTop: 15,
     fontSize: 17,
-    color: '#000',
+    color: theme.colors.dark,
   },
   offer: {
     fontSize: 15,
     marginTop: 17,
     marginLeft: 5,
-    color: '#000',
+    color: theme.colors.dark,
   },
   card: {
     margin: 20,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.light,
     borderRadius: 13,
   },
   price: {
     fontSize: 30,
     fontWeight: 'bold',
     marginVertical: 27,
-    color: '#000',
+    color: theme.colors.dark,
   },
   btn: {
     width: Dimensions.get('window').width / 1.7,
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
   item: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#000',
+    color: theme.colors.dark,
   },
   listIcon: {
     marginRight: -5,

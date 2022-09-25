@@ -18,12 +18,12 @@ import {
   Chip,
 } from 'react-native-paper';
 import SlideImage from '../components/SlideImage';
+import theme from '../themes';
 
 LogBox.ignoreLogs(['Sending...']);
 
-const ProjectDetails: React.FC = ({theme, route, navigation}: any) => {
+const ProjectDetails: React.FC = ({route, navigation}: any) => {
   const {item} = route.params;
-  const {colors} = theme;
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -47,7 +47,7 @@ const ProjectDetails: React.FC = ({theme, route, navigation}: any) => {
               <Text style={styles.servicesText}>Etat du projet: </Text>
               <Chip
                 style={styles.servicesAmount}
-                selectedColor={colors.danger}
+                selectedColor={theme.colors.error}
                 icon="check">
                 {item?.status}
               </Chip>
@@ -55,11 +55,11 @@ const ProjectDetails: React.FC = ({theme, route, navigation}: any) => {
           </View>
         </View>
         <Button
-          buttonColor="#9f662f"
-          textColor="white"
+          buttonColor={theme.colors.primary}
+          textColor={theme.colors.light}
+          theme={{roundness: 2}}
           onPress={() => navigation.navigate('Offer', {project: item})}
-          style={styles.btn}
-          theme={{roundness: 20}}>
+          style={styles.btn}>
           Investir dans ce projet
         </Button>
       </SafeAreaView>

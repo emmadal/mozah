@@ -22,9 +22,9 @@ import {updateUserProfile, uploadUserPhoto} from '../api';
 import {Formik} from 'formik';
 import Loader from '../components/Loader';
 import {AuthContext} from '../context/AuthContext';
+import theme from '../themes';
 
-const Profile: React.FC = ({theme}: any) => {
-  const {colors} = theme;
+const Profile: React.FC = () => {
   const {state, dispatch} = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -56,11 +56,11 @@ const Profile: React.FC = ({theme}: any) => {
         saveToPhotos: true,
       });
       setLoading(!loading);
-      if (pic.assets) {
+      if (pic?.assets) {
         try {
           const photoURL = await uploadUserPhoto(
-            pic?.assets[0].uri,
-            pic?.assets[0].fileName,
+            pic?.assets[0].uri ?? '',
+            pic?.assets[0].fileName ?? '',
           );
           if (photoURL) {
             const req = await updateUserProfile(state.user, {photoURL});
@@ -69,7 +69,6 @@ const Profile: React.FC = ({theme}: any) => {
           }
         } catch (error) {
           setLoading(false);
-          console.log('error message: ', error);
         }
       } else {
         setLoading(false);
@@ -104,9 +103,9 @@ const Profile: React.FC = ({theme}: any) => {
             />
           ) : (
             <Avatar.Text
-              color={colors.white}
+              color={theme.colors.light}
               size={70}
-              label={getFirstLetterOfName()}
+              label={getFirstLetterOfName() ?? ''}
             />
           )}
         </TouchableOpacity>
@@ -146,7 +145,12 @@ const Profile: React.FC = ({theme}: any) => {
                   value={values.email}
                   mode="outlined"
                   label="Email"
-                  right={<TextInput.Icon name="email" color={colors.primary} />}
+                  right={
+                    <TextInput.Icon
+                      icon="email"
+                      iconColor={theme.colors.dark}
+                    />
+                  }
                 />
               </View>
               <TextInput
@@ -160,7 +164,7 @@ const Profile: React.FC = ({theme}: any) => {
                 value={values.fullName}
                 label="Nom & Prénom"
                 right={
-                  <TextInput.Icon name="human-male" color={colors.primary} />
+                  <TextInput.Icon icon="human" iconColor={theme.colors.dark} />
                 }
               />
               <TextInput
@@ -172,7 +176,9 @@ const Profile: React.FC = ({theme}: any) => {
                 label="Numero de telephone"
                 onChangeText={handleChange('phoneNumber')}
                 onBlur={handleBlur('phoneNumber')}
-                right={<TextInput.Icon name="phone" color={colors.primary} />}
+                right={
+                  <TextInput.Icon icon="phone" iconColor={theme.colors.dark} />
+                }
               />
               <TextInput
                 style={styles.input}
@@ -183,15 +189,19 @@ const Profile: React.FC = ({theme}: any) => {
                 onChangeText={handleChange('metamask_acc')}
                 onBlur={handleBlur('metamask_acc')}
                 right={
-                  <TextInput.Icon name="clipboard" color={colors.primary} />
+                  <TextInput.Icon
+                    icon="clipboard"
+                    iconColor={theme.colors.dark}
+                  />
                 }
               />
               <Button
-                labelStyle={{color: colors.white}}
+                textColor={theme.colors.light}
+                buttonColor={theme.colors.primary}
                 onPress={handleSubmit}
                 style={styles.btn}
                 mode="contained"
-                theme={{roundness: 20}}>
+                theme={{roundness: 2}}>
                 Mise à jour
               </Button>
             </SafeAreaView>
@@ -203,11 +213,11 @@ const Profile: React.FC = ({theme}: any) => {
         action={{
           label: 'Fermer',
           onPress: () => onDismissSnackBar(),
-          labelStyle: {color: colors.white},
+          labelStyle: {color: theme.colors.light},
         }}
         style={{
-          backgroundColor: colors.primary,
-          color: colors.white,
+          backgroundColor: theme.colors.primary,
+          color: theme.colors.light,
         }}
         visible={visible}
         onDismiss={onDismissSnackBar}>
@@ -242,7 +252,7 @@ const styles = StyleSheet.create({
   labelError: {
     marginTop: 4,
     fontSize: 13,
-    color: 'red',
+    color: theme.colors.error,
     fontWeight: 'bold',
   },
 });

@@ -7,12 +7,12 @@ import Loader from '../components/Loader';
 import {login, getProfile, registerUser} from '../api';
 import {AuthContext} from '../context/AuthContext';
 import {SignupTypes} from '../types';
+import theme from '../themes';
 
-const Signup: React.FC = ({theme}: any) => {
+const Signup: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isView, setIsView] = useState(true);
   const {dispatch} = useContext(AuthContext);
-  const {colors} = theme;
 
   const handleSignup = async (values: SignupTypes) => {
     try {
@@ -90,7 +90,7 @@ const Signup: React.FC = ({theme}: any) => {
                 onChangeText={handleChange('name')}
                 onBlur={handleBlur('name')}
                 right={
-                  <TextInput.Icon name="human-male" color={colors.primary} />
+                  <TextInput.Icon icon="human" iconColor={theme.colors.dark} />
                 }
               />
               {errors.name && touched.name && (
@@ -106,7 +106,9 @@ const Signup: React.FC = ({theme}: any) => {
                 label="Email"
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
-                right={<TextInput.Icon name="email" color={colors.primary} />}
+                right={
+                  <TextInput.Icon icon="email" iconColor={theme.colors.dark} />
+                }
               />
               {errors.email && touched.email && (
                 <Text style={styles.labelError}>{errors.email}</Text>
@@ -123,8 +125,8 @@ const Signup: React.FC = ({theme}: any) => {
                 onBlur={handleBlur('password')}
                 right={
                   <TextInput.Icon
-                    name={isView ? 'eye-off' : 'eye'}
-                    color={colors.primary}
+                    icon={isView ? 'eye-off' : 'eye'}
+                    iconColor={theme.colors.dark}
                     onPress={handleViewPassword}
                   />
                 }
@@ -134,11 +136,11 @@ const Signup: React.FC = ({theme}: any) => {
               )}
             </View>
             <Button
-              buttonColor="#9f662f"
-              textColor="white"
+              buttonColor={theme.colors.primary}
+              textColor={theme.colors.light}
+              theme={{roundness: 2}}
               onPress={handleSubmit}
-              style={styles.btn}
-              theme={{roundness: 20}}>
+              style={styles.btn}>
               Creation de compte
             </Button>
           </React.Fragment>
@@ -151,7 +153,7 @@ const Signup: React.FC = ({theme}: any) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: theme.colors.light,
     justifyContent: 'center',
   },
   appTitle: {
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
   labelError: {
     marginTop: 4,
     fontSize: 13,
-    color: 'red',
+    color: theme.colors.error,
     fontWeight: 'bold',
   },
 });

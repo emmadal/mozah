@@ -2,6 +2,7 @@ import React, {Fragment} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
 import {withTheme, Button, Text, Divider} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import theme from '../themes';
 
 const TransactionDetails: React.FC = ({route}: any) => {
   const {transaction} = route.params;
@@ -79,9 +80,9 @@ const TransactionDetails: React.FC = ({route}: any) => {
           icon="arrow-left"
           onPress={() => navigation.goBack()}
           style={styles.btn}
-          buttonColor="#9f662f"
-          textColor="white"
-          theme={{roundness: 20}}>
+          buttonColor={theme.colors.primary}
+          textColor={theme.colors.light}
+          theme={{roundness: 2}}>
           Retour
         </Button>
       </View>
@@ -112,14 +113,14 @@ const styles = StyleSheet.create({
   price: {
     fontWeight: 'bold',
     marginVertical: 10,
-    color: '#9f662f',
+    color: theme.colors.primary,
   },
   details: {
     fontWeight: 'bold',
     marginVertical: 10,
   },
   subTitle: {
-    color: 'grey',
+    color: theme.colors.grey,
   },
   subTitleResponse: {
     fontWeight: 'bold',
